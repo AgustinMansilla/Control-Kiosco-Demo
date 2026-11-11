@@ -1,0 +1,36 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Personal · Control Kiosco</title><style>
+:root{--bg:#f5f7fb;--panel:#fff;--text:#142033;--muted:#64748b;--border:#e2e8f0}*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text)}.contenedor{width:min(500px,100%);margin:auto;padding:24px 14px 40px}.volver{text-decoration:none;color:#2563eb;font-weight:800;display:inline-block;padding:8px 2px}.tarjeta{margin-top:15px;padding:24px;background:#fff;border:1px solid var(--border);border-radius:22px;text-align:center;box-shadow:0 8px 24px rgba(15,23,42,.06)}h1{margin:0 0 7px;font-size:32px;letter-spacing:-.5px}.turnos{color:var(--muted);margin-bottom:22px;font-size:14px}.turnos strong{color:#334155}.bloque{border-radius:17px;padding:21px;margin-bottom:18px}.sin-entrada{background:#eff6ff;color:#1e3a8a}.trabajando{background:#dcfce7;color:#166534}.pendiente{background:#fef3c7;color:#92400e}.cobrado{background:#dbeafe;color:#1e40af}.falta{background:#fee2e2;color:#991b1b}.etiqueta{display:block;font-size:13px;margin-bottom:6px;font-weight:750}.valor{font-size:30px;font-weight:900}.resumen{text-align:left;margin-top:14px;line-height:1.8;background:rgba(255,255,255,.55);padding:13px;border-radius:12px}.boton{width:100%;display:flex;align-items:center;justify-content:center;min-height:55px;padding:16px;border:0;border-radius:15px;color:#fff;font-size:18px;font-weight:850;text-decoration:none;cursor:pointer}.entrada{background:#16a34a}.salida{background:#dc2626}.cobrar{background:#16a34a;margin-top:14px}.sin-jornada{background:#fff7ed;color:#9a3412;border-radius:14px;padding:18px}.nota{font-size:12px;color:var(--muted);margin-top:13px;line-height:1.45}.boton:disabled{opacity:.55}
+
+.vida-kiosk-hero{background:linear-gradient(135deg,#dbeafe,#eff6ff);padding:16px;border-radius:16px;display:flex;align-items:center;gap:10px}
+.vida-kicker{color:#2563eb;font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:800}
+.vida-name{font-size:24px;font-weight:900;color:#17345f}
+.vida-sub{font-size:12px;color:#64748b}.tarjeta h1{margin-bottom:12px}
+</style></head><body><div class="contenedor">
+<div class="vida-kiosk-hero vida-brand"><div class="vida-brand-copy"><div class="vida-kicker">Maxikiosco</div><div class="vida-name">VI-DA</div><div class="vida-sub">Registro de personal</div></div></div>
+<a href="../index.html" class="volver">← Volver al inicio</a>
+<section class="tarjeta">
+<h1 id="employeeName">Empleado</h1>
+<div class="turnos">Hoy · <strong id="shiftName">Turno mañana · 07:00 a 13:00</strong></div>
+<div class="bloque sin-entrada" id="statusBox"><span class="etiqueta" id="statusLabel">Listo para comenzar</span><div class="valor" id="statusValue">Marcar entrada</div><div class="resumen" id="statusSummary">Registrá la entrada para comenzar la jornada.</div></div>
+<button class="boton entrada" id="entryButton" type="button">Marcar entrada</button>
+<button class="boton salida" id="exitButton" type="button" hidden>Marcar salida</button>
+<p class="nota" id="recordInfo" role="status" aria-live="polite"></p>
+</section></div>
+<script>
+const params=new URLSearchParams(location.search);const name=(params.get("nombre")||"Empleado").slice(0,60);
+const shift=(params.get("turno")||"Turno mañana · 07:00 a 13:00").slice(0,85);
+document.getElementById("employeeName").textContent=name;document.getElementById("shiftName").textContent=shift;
+const key="controlKioscoExample:"+name;let state={};
+try{state=JSON.parse(sessionStorage.getItem(key)||"{}")}catch(_){}
+function draw(){const s=document.getElementById("statusBox");
+const label=document.getElementById("statusLabel"),value=document.getElementById("statusValue"),summary=document.getElementById("statusSummary");
+const entry=document.getElementById("entryButton"),exit=document.getElementById("exitButton"),info=document.getElementById("recordInfo");
+s.className="bloque "+(state.exit?"pendiente":state.entry?"trabajando":"sin-entrada");
+label.textContent=state.exit?"Turno finalizado":state.entry?"● Trabajando":"Listo para comenzar";
+value.textContent=state.exit?"Cobro pendiente":state.entry?"Entrada "+state.entry:"Marcar entrada";
+summary.textContent=state.exit?"Entrada: "+state.entry+" · Salida: "+state.exit:state.entry?"Turno: "+shift:"Registrá la entrada para comenzar la jornada.";
+entry.hidden=!!state.entry;exit.hidden=!state.entry||!!state.exit;info.textContent=state.exit?"Jornada registrada.":state.entry?"Entrada registrada.":"";}
+document.getElementById("entryButton").addEventListener("click",()=>{if(state.entry)return;state.entry=new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});sessionStorage.setItem(key,JSON.stringify(state));draw()});
+document.getElementById("exitButton").addEventListener("click",()=>{if(!state.entry||state.exit)return;state.exit=new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});sessionStorage.setItem(key,JSON.stringify(state));draw()});draw();
+</script></body></html>
