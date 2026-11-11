@@ -27,8 +27,9 @@ Sistema web para registrar la actividad del personal, administrar jornadas de tr
 
 ## Interfaz del sistema
 
-- [**Pantalla de personal**](presentacion/index.html): consulta de turnos y registro de asistencia.
-- [**Panel de administración**](presentacion/administrador.html): gestión de jornadas, personal y cobros.
+- [**Pantalla de personal**](index.html): consulta de turnos y registro de asistencia.
+- [**Panel de administración**](presentacion/administrador.html): gestión de jornadas, personal y cobros, con navegación por secciones.
+- [**Registro de personal**](presentacion/empleado.html): entrada y salida desde la pantalla individual.
 
 Las páginas incluyen estilos y estructura provenientes de las plantillas del sistema, con registros de ejemplo.
 
@@ -36,9 +37,10 @@ Las páginas incluyen estilos y estructura provenientes de las plantillas del si
 
 ```text
 Control-Kiosco-Demo/
+├── index.html
 ├── presentacion/
-│   ├── index.html
-│   └── administrador.html
+│   ├── administrador.html
+│   └── empleado.html
 └── README.md
 ```
 
